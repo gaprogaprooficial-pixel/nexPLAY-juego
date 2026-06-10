@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexPlay - Juega Sin Límites</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash" class="splash">
+  <div class="splash-logo">
+    <span class="logo-nx">nex</span><span class="logo-play">play</span>
+    <div class="logo-tagline">by devs, for everyone</div>
+  </div>
+  <div class="splash-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="splash-buttons">
+    <button class="btn-primary big" onclick="showLogin()">INICIAR SESIÓN</button>
+    <button class="btn-secondary big" onclick="showRegister()">REGISTRARSE</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen" class="screen hidden">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo"><span class="logo-nx">nex</span><span class="logo-play">play</span></div>
+      <h2>Bienvenido de vuelta</h2>
+      <div class="form-group">
+        <label>Usuario o Email</label>
+        <input type="text" id="login-user" placeholder="Ingresa tu usuario o email" />
+        <div id="login-user-hint" class="ai-hint hidden"></div>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="Contraseña" />
+      </div>
+      <div id="login-error" class="error-msg hidden"></div>
+      <button class="btn-primary full" onclick="doLogin()">Entrar</button>
+      <p class="switch-auth">¿No tienes cuenta? <a onclick="showRegister()">Regístrate</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div id="register-screen" class="screen hidden">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo"><span class="logo-nx">nex</span><span class="logo-play">play</span></div>
+      <h2>Crear cuenta</h2>
+      <div class="form-group">
+        <label>Nombre de usuario <span class="ai-badge">IA</span></label>
+        <input type="text" id="reg-username" placeholder="Ej: GamerPro2024" oninput="checkUsername(this.value)" />
+        <div id="username-feedback" class="ai-hint"></div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="tu@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <div class="form-group">
+        <label>Rol</label>
+        <select id="reg-role">
+          <option value="player">Jugador</option>
+          <option value="dev">Desarrollador</option>
+        </select>
+      </div>
+      <div id="reg-error" class="error-msg hidden"></div>
+      <button class="btn-primary full" onclick="doRegister()">Crear cuenta</button>
+      <p class="switch-auth">¿Ya tienes cuenta? <a onclick="showLogin()">Inicia sesión</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- WELCOME FLOW -->
+<div id="welcome-screen" class="screen hidden">
+  <div class="welcome-overlay">
+    <div class="welcome-card" id="welcome-step-1">
+      <div class="welcome-emoji">🎮</div>
+      <h1 id="welcome-title">¡Bienvenido, <span id="welcome-name"></span>!</h1>
+      <p id="welcome-msg">Nos alegra tenerte en NexPlay. Aquí encontrarás miles de juegos, podrás conectar con otros jugadores y mucho más.</p>
+      <div class="welcome-features">
+        <div class="wf-item"><span>🕹️</span> Miles de juegos gratis</div>
+        <div class="wf-item"><span>👥</span> Comunidad activa</div>
+        <div class="wf-item"><span>🏆</span> Rankings y logros</div>
+        <div class="wf-item"><span>🔥</span> Juegos destacados</div>
+      </div>
+      <button class="btn-primary big" onclick="welcomeNext()">Siguiente →</button>
+    </div>
+    <div class="welcome-card hidden" id="welcome-step-2">
+      <div class="welcome-emoji">📋</div>
+      <h2>Términos y Condiciones</h2>
+      <div class="terms-box">
+        <h3>NexPlay — Términos de Uso</h3>
+        <p><strong>1. Responsabilidad de cuenta:</strong> El usuario es responsable de la seguridad de su cuenta. NexPlay <u>NO se hace responsable</u> por robo, hackeo o pérdida de acceso a cuentas.</p>
+        <p><strong>2. Contenido:</strong> Los juegos publicados son responsabilidad de sus desarrolladores. NexPlay actúa como plataforma intermediaria.</p>
+        <p><strong>3. Conducta:</strong> Queda prohibido el uso de lenguaje ofensivo, acoso, o cualquier conducta que perjudique a otros usuarios.</p>
+        <p><strong>4. Menores:</strong> Si eres menor de 13 años, necesitas autorización de un tutor legal.</p>
+        <p><strong>5. Datos:</strong> NexPlay recopila datos básicos para mejorar la experiencia. No vendemos tu información.</p>
+        <p><strong>6. Cambios:</strong> Nos reservamos el derecho de modificar estos términos con previo aviso.</p>
+        <p class="terms-disclaimer">⚠️ NexPlay NO se responsabiliza por: pérdida de cuentas, robo de credenciales, daños derivados del uso de juegos de terceros, ni por interrupciones del servicio.</p>
+      </div>
+      <label class="checkbox-label">
+        <input type="checkbox" id="terms-check" /> Acepto los términos y condiciones
+      </label>
+      <button class="btn-primary big" onclick="acceptTerms()">Aceptar y Continuar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" class="screen hidden">
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="nav-logo" onclick="goHome()"><span class="logo-nx">nex</span><span class="logo-play">play</span></div>
+    <div class="nav-search">
+      <input type="text" id="search-input" placeholder="🔍 Buscar juegos..." oninput="searchGames(this.value)" />
+      <div id="search-results" class="search-dropdown hidden"></div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="showSection('home')">🏠</button>
+      <button class="nav-btn" onclick="showSection('categories')">🎯</button>
+      <button class="nav-btn" id="dev-btn" onclick="showSection('dev')" style="display:none">⚙️ Dev</button>
+      <div class="nav-user" onclick="toggleUserMenu()">
+        <div class="avatar" id="nav-avatar"></div>
+        <span id="nav-username-display"></span>
+        <div class="user-dropdown" id="user-dropdown">
+          <div class="ud-item" onclick="showSection('profile')">👤 Mi Perfil</div>
+          <div class="ud-item" onclick="showSection('favorites')">❤️ Favoritos</div>
+          <div class="ud-item" onclick="showSection('history')">🕑 Historial</div>
+          <div class="ud-item" id="admin-link" onclick="showSection('admin')" style="display:none">🛡️ Panel Admin</div>
+          <div class="ud-item" id="dev-link" onclick="showSection('dev')" style="display:none">🎮 Panel Dev</div>
+          <div class="ud-divider"></div>
+          <div class="ud-item logout" onclick="doLogout()">🚪 Cerrar sesión</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+
+    <!-- HOME -->
+    <section id="section-home" class="section active">
+      <div class="hero-banner">
+        <div class="hero-text">
+          <h1>Juega. Compite. <span class="gradient-text">Domina.</span></h1>
+          <p>Miles de juegos gratis directamente en tu navegador</p>
+        </div>
+        <div class="hero-art">🎮</div>
+      </div>
+      <div class="section-header"><h2>🔥 Destacados</h2></div>
+      <div class="games-grid" id="featured-games"></div>
+      <div class="section-header"><h2>🆕 Nuevos</h2></div>
+      <div class="games-grid" id="new-games"></div>
+      <div class="section-header"><h2>🏆 Populares</h2></div>
+      <div class="games-grid" id="popular-games"></div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section id="section-categories" class="section">
+      <h2 class="page-title">Categorías</h2>
+      <div class="categories-grid" id="categories-grid"></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="section-profile" class="section">
+      <div class="profile-header">
+        <div class="profile-avatar-big" id="profile-avatar-big"></div>
+        <div class="profile-info">
+          <h2 id="profile-username-big"></h2>
+          <span class="role-badge" id="profile-role-badge"></span>
+          <p id="profile-joined"></p>
+        </div>
+        <button class="btn-secondary" onclick="showEditProfile()">✏️ Editar Perfil</button>
+      </div>
+      <div class="profile-stats">
+        <div class="stat"><span id="stat-played">0</span><label>Jugados</label></div>
+        <div class="stat"><span id="stat-likes">0</span><label>Me gusta dados</label></div>
+        <div class="stat"><span id="stat-favs">0</span><label>Favoritos</label></div>
+      </div>
+      <div class="section-header"><h2>🎮 Juegos recientes</h2></div>
+      <div class="games-grid" id="profile-recent-games"></div>
+    </section>
+
+    <!-- FAVORITES -->
+    <section id="section-favorites" class="section">
+      <h2 class="page-title">❤️ Mis Favoritos</h2>
+      <div class="games-grid" id="favorites-grid"></div>
+    </section>
+
+    <!-- HISTORY -->
+    <section id="section-history" class="section">
+      <h2 class="page-title">🕑 Historial</h2>
+      <div class="games-grid" id="history-grid"></div>
+    </section>
+
+    <!-- GAME PLAYER -->
+    <section id="section-game" class="section">
+      <div class="game-layout">
+        <div class="game-main">
+          <div class="game-frame-wrap">
+            <iframe id="game-iframe" src="" allowfullscreen></iframe>
+          </div>
+          <div class="game-meta">
+            <div class="game-meta-left">
+              <img class="game-cover-sm" id="gm-cover" src="" />
+              <div>
+                <h3 id="gm-title"></h3>
+                <p id="gm-dev"></p>
+              </div>
+            </div>
+            <div class="game-actions">
+              <button class="react-btn like-btn" id="gm-like" onclick="reactGame('like')"><span>👍</span><span id="gm-likes">0</span></button>
+              <button class="react-btn dislike-btn" id="gm-dislike" onclick="reactGame('dislike')"><span>👎</span><span id="gm-dislikes">0</span></button>
+              <button class="react-btn" onclick="reactGame('fire')">🔥</button>
+              <button class="react-btn" onclick="reactGame('wow')">😮</button>
+              <button class="react-btn fav-btn" id="gm-fav" onclick="toggleFavorite()">❤️</button>
+              <button class="react-btn" onclick="shareGame()">🔗</button>
+              <button class="react-btn" onclick="reportGame()">🚩</button>
+            </div>
+          </div>
+          <div class="game-desc-box">
+            <h4>Descripción</h4>
+            <p id="gm-desc"></p>
+            <div class="game-tags" id="gm-tags"></div>
+          </div>
+        </div>
+        <div class="game-sidebar">
+          <h4>Más juegos</h4>
+          <div id="sidebar-games"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEV PANEL -->
+    <section id="section-dev" class="section">
+      <div class="dev-header">
+        <h2>🎮 Panel de Desarrollador</h2>
+        <button class="btn-primary" onclick="showPublishGame()">+ Publicar Juego</button>
+      </div>
+      <div class="dev-team-box" id="dev-team-box"></div>
+      <div class="section-header"><h2>Mis Juegos</h2></div>
+      <div class="games-grid" id="dev-games-grid"></div>
+
+      <!-- PUBLISH FORM -->
+      <div id="publish-form" class="modal hidden">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>Publicar Nuevo Juego</h3>
+            <button onclick="closeModal('publish-form')">✕</button>
+          </div>
+          <div class="form-group">
+            <label>Nombre del juego</label>
+            <input type="text" id="pub-name" placeholder="Nombre del juego" />
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea id="pub-desc" placeholder="Describe tu juego..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>URL del juego (HTML5)</label>
+            <input type="url" id="pub-url" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label>URL de portada</label>
+            <input type="url" id="pub-cover" placeholder="https://...imagen.jpg" />
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <select id="pub-category">
+              <option>Acción</option><option>Puzzle</option><option>Aventura</option>
+              <option>Deportes</option><option>Carreras</option><option>Plataformas</option>
+              <option>Multijugador</option><option>Casual</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tags (separados por comas)</label>
+            <input type="text" id="pub-tags" placeholder="ej: acción, 2D, pixel art" />
+          </div>
+          <button class="btn-primary full" onclick="submitGame()">📤 Enviar para revisión</button>
+        </div>
+      </div>
+
+      <!-- TEAM SETUP -->
+      <div id="team-form" class="modal hidden">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>Configurar Mi Equipo</h3>
+            <button onclick="closeModal('team-form')">✕</button>
+          </div>
+          <div class="form-group">
+            <label>Nombre del equipo</label>
+            <input type="text" id="team-name" placeholder="Nombre del estudio o equipo" />
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea id="team-desc" placeholder="Describe tu equipo..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>URL del logo</label>
+            <input type="url" id="team-logo" placeholder="https://...logo.png" />
+          </div>
+          <div class="form-group">
+            <label>Contraseña de protección del equipo</label>
+            <input type="password" id="team-pw" placeholder="Protege tu equipo" />
+          </div>
+          <button class="btn-primary full" onclick="saveTeam()">💾 Guardar Equipo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <section id="section-admin" class="section">
+      <h2 class="page-title">🛡️ Panel de Administración</h2>
+      <div class="admin-tabs">
+        <button class="atab active" onclick="adminTab('users')">👥 Usuarios</button>
+        <button class="atab" onclick="adminTab('games')">🎮 Juegos</button>
+        <button class="atab" onclick="adminTab('teams')">🏢 Equipos</button>
+        <button class="atab" onclick="adminTab('pending')">⏳ Pendientes</button>
+      </div>
+      <div id="admin-users" class="admin-content active"></div>
+      <div id="admin-games" class="admin-content"></div>
+      <div id="admin-teams" class="admin-content"></div>
+      <div id="admin-pending" class="admin-content"></div>
+    </section>
+
+  </div><!-- end content-area -->
+</div><!-- end main-app -->
+
+<!-- EDIT PROFILE MODAL -->
+<div id="edit-profile-modal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Editar Perfil</h3>
+      <button onclick="closeModal('edit-profile-modal')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Nombre de usuario</label>
+      <input type="text" id="edit-username" />
+    </div>
+    <div class="form-group">
+      <label>Bio</label>
+      <textarea id="edit-bio" placeholder="Cuéntanos algo sobre ti..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Avatar (emoji)</label>
+      <input type="text" id="edit-avatar" placeholder="🎮" maxlength="2" />
+    </div>
+    <button class="btn-primary full" onclick="saveProfile()">Guardar</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
