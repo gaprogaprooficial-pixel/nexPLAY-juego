@@ -2,367 +2,656 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NexPlay - Juega Sin Límites</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NexPlay — Juega Sin Límites</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<!-- SPLASH SCREEN -->
-<div id="splash" class="splash">
-  <div class="splash-logo">
-    <span class="logo-nx">nex</span><span class="logo-play">play</span>
-    <div class="logo-tagline">by devs, for everyone</div>
-  </div>
-  <div class="splash-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
-  <div class="splash-buttons">
-    <button class="btn-primary big" onclick="showLogin()">INICIAR SESIÓN</button>
-    <button class="btn-secondary big" onclick="showRegister()">REGISTRARSE</button>
+<style>
+:root{
+  --t:#00c9b1;--td:#00a896;--p:#7c3aed;--pk:#f43f5e;--y:#fbbf24;
+  --bg:#0a0a16;--bg2:#13132a;--card:#1a1a32;--card2:#22223c;
+  --tx:#e8e8f0;--tx2:#8888aa;--bd:#26264a;
+  --ok:#22c55e;--er:#ef4444;--wa:#f59e0b;
+  --r:16px;--sh:0 8px 40px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+.lx{color:#fff;font-family:'Baloo 2',cursive;font-weight:800;font-size:inherit}
+.lp{color:var(--t);font-family:'Baloo 2',cursive;font-weight:800;font-size:inherit}
+.gtx{background:linear-gradient(135deg,var(--t),var(--p));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes floatS{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes orbF{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-25px) scale(1.08)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.35)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(0,201,177,.4)}50%{box-shadow:0 0 28px rgba(0,201,177,.8)}}
+@keyframes notifIn{from{opacity:0;transform:translateX(120px)}to{opacity:1;transform:translateX(0)}}
+@keyframes notifOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(120px)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes holo{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+@keyframes glitch{0%,100%{clip-path:inset(0 0 0 0)}20%{clip-path:inset(20% 0 60% 0);transform:translate(-2px,0)}40%{clip-path:inset(50% 0 30% 0);transform:translate(2px,0)}60%{clip-path:inset(10% 0 85% 0);transform:translate(-1px,0)}80%{clip-path:inset(80% 0 5% 0);transform:translate(1px,0)}}
+.hidden{display:none!important}
+/* BUTTONS */
+.btn-p{background:linear-gradient(135deg,var(--t),var(--td));color:#fff;border:none;border-radius:50px;padding:14px 28px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;letter-spacing:.5px;cursor:pointer;transition:all .2s;text-transform:uppercase;box-shadow:0 4px 20px rgba(0,201,177,.35);position:relative;overflow:hidden}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(0,201,177,.55)}
+.btn-p.big{padding:18px 38px;font-size:16px}.btn-p.full{width:100%}
+.btn-s{background:transparent;color:var(--t);border:2px solid var(--t);border-radius:50px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-s:hover{background:rgba(0,201,177,.12);transform:translateY(-2px)}
+.btn-s.big{padding:16px 34px;font-size:15px}
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:1000;background:radial-gradient(ellipse at 30% 50%,#0d1a3a 0%,#0a0a16 60%,#0d0a1e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:52px}
+.splash-orbs{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px)}
+.orb1{width:520px;height:520px;background:var(--t);opacity:.1;top:-160px;left:-120px;animation:orbF 9s ease-in-out infinite}
+.orb2{width:420px;height:420px;background:var(--p);opacity:.1;bottom:-100px;right:-80px;animation:orbF 11s ease-in-out infinite 3s}
+.orb3{width:320px;height:320px;background:var(--pk);opacity:.08;top:40%;left:35%;animation:orbF 8s ease-in-out infinite 1.5s}
+.splash-logo{text-align:center;position:relative;z-index:1;animation:float 3.5s ease-in-out infinite}
+.splash-logo .lx,.splash-logo .lp{font-size:92px;letter-spacing:-3px;filter:drop-shadow(0 4px 20px rgba(0,201,177,.4))}
+.splash-tagline{color:var(--tx2);font-size:13px;letter-spacing:4px;text-transform:uppercase;margin-top:8px}
+.splash-btns{display:flex;flex-direction:column;gap:14px;width:300px;position:relative;z-index:1;animation:slideUp .9s ease .25s both}
+/* SCREENS */
+.screen{position:fixed;inset:0;z-index:500;overflow-y:auto}
+/* AUTH */
+.auth-bg{min-height:100%;background:linear-gradient(135deg,var(--bg) 0%,#1a1438 100%);display:flex;align-items:center;justify-content:center;padding:24px}
+.auth-card{background:var(--card);border:1px solid var(--bd);border-radius:26px;padding:44px;width:100%;max-width:430px;box-shadow:var(--sh);animation:cardIn .45s ease}
+.auth-logo{font-size:40px;text-align:center;margin-bottom:8px;animation:floatS 3s ease-in-out infinite}
+.auth-card h2{text-align:center;font-size:23px;margin-bottom:30px;font-family:'Baloo 2',cursive}
+/* FORM */
+.fg{margin-bottom:18px}
+.fg label{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:var(--tx2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.6px}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--bg2);border:1.5px solid var(--bd);border-radius:12px;padding:12px 16px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:14px;transition:border-color .2s,box-shadow .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--t);box-shadow:0 0 0 3px rgba(0,201,177,.15)}
+.fg textarea{resize:vertical;min-height:80px}.fg select{appearance:none;cursor:pointer}
+/* FILE UPLOAD */
+.file-upload-area{border:2px dashed var(--bd);border-radius:16px;padding:28px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;background:var(--bg2)}
+.file-upload-area:hover{border-color:var(--t);background:rgba(0,201,177,.05)}
+.file-upload-area.drag{border-color:var(--t);background:rgba(0,201,177,.1);transform:scale(1.02)}
+.file-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.file-upload-area .up-icon{font-size:36px;margin-bottom:10px;display:block}
+.file-upload-area .up-text{font-size:14px;font-weight:700;color:var(--tx2)}
+.file-upload-area .up-sub{font-size:11px;color:var(--tx2);margin-top:4px}
+.img-preview{width:100%;max-height:180px;object-fit:cover;border-radius:12px;margin-top:10px;display:none;border:2px solid var(--bd);user-select:none;-webkit-user-drag:none;pointer-events:none}
+.img-preview.show{display:block}
+/* IMAGE PROTECTION */
+img{-webkit-user-drag:none;user-drag:none;-webkit-user-select:none;user-select:none}
+.img-protected{position:relative;display:inline-block}
+.img-protected::after{content:'© NexPlay';position:absolute;bottom:6px;right:8px;font-size:10px;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:1px;pointer-events:none}
+/* AI HINTS */
+.aib{background:linear-gradient(135deg,var(--t),var(--p));color:#fff;font-size:10px;padding:2px 7px;border-radius:5px;font-weight:800}
+.aih{font-size:12px;margin-top:6px;padding:8px 12px;border-radius:9px;animation:fadeIn .3s}
+.aih.ok{background:rgba(34,197,94,.1);color:var(--ok);border:1px solid rgba(34,197,94,.3)}
+.aih.warn{background:rgba(245,158,11,.1);color:var(--wa);border:1px solid rgba(245,158,11,.3)}
+.aih.bad{background:rgba(239,68,68,.1);color:var(--er);border:1px solid rgba(239,68,68,.3)}
+.emsg{background:rgba(239,68,68,.1);color:var(--er);border:1px solid rgba(239,68,68,.3);border-radius:11px;padding:10px 14px;font-size:13px;margin-bottom:14px;animation:shake .4s}
+.swa{text-align:center;margin-top:18px;font-size:13px;color:var(--tx2)}.swa a{color:var(--t);cursor:pointer;font-weight:800}
+/* WELCOME */
+.welcome-bg{min-height:100%;background:linear-gradient(160deg,#08081a 0%,#150f2e 60%,#0a1420 100%);display:flex;align-items:center;justify-content:center;padding:24px}
+.wcard{background:var(--card);border:1px solid var(--bd);border-radius:28px;padding:48px 42px;width:100%;max-width:560px;text-align:center;box-shadow:var(--sh);animation:cardIn .5s ease}
+.wemoji{font-size:68px;margin-bottom:18px;animation:float 2.5s ease-in-out infinite;display:block}
+.wcard h1{font-size:30px;margin-bottom:12px;font-family:'Baloo 2',cursive}
+.wcard h2{font-size:26px;margin-bottom:16px;font-family:'Baloo 2',cursive}
+.wcard>p{color:var(--tx2);margin-bottom:28px;line-height:1.7}
+.wfeatures{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px;text-align:left}
+.wf{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;transition:transform .2s,border-color .2s}
+.wf:hover{transform:scale(1.03);border-color:var(--t)}
+.wf span{font-size:28px;flex-shrink:0}.wf strong{display:block;font-size:13px}.wf small{color:var(--tx2);font-size:11px}
+.terms-box{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:20px;max-height:230px;overflow-y:auto;text-align:left;margin-bottom:18px;font-size:13px;line-height:1.8;color:var(--tx2)}
+.terms-box h3{color:var(--tx);margin-bottom:14px;font-size:15px}.terms-box p{margin-bottom:12px}.terms-box strong{color:var(--tx)}
+.tdiscl{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:12px;color:var(--er)!important;font-weight:700}
+.cklabel{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:600;margin-bottom:20px;color:var(--tx2)}.cklabel input{width:18px;height:18px;cursor:pointer;accent-color:var(--t)}
+/* MAIN APP */
+#main-app{display:flex;flex-direction:column;min-height:100vh}
+/* TOPNAV */
+.topnav{position:sticky;top:0;z-index:100;background:rgba(10,10,22,.97);backdrop-filter:blur(22px);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:14px;padding:0 24px;height:64px}
+.nav-logo{font-size:28px;cursor:pointer;flex-shrink:0;transition:transform .2s}.nav-logo:hover{transform:scale(1.05)}
+.nav-search{flex:1;max-width:500px;position:relative}
+.nav-search input{width:100%;background:var(--card);border:1.5px solid var(--bd);border-radius:50px;padding:10px 20px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:14px;transition:all .2s}
+.nav-search input:focus{outline:none;border-color:var(--t);box-shadow:0 0 0 3px rgba(0,201,177,.12)}
+.sdrop{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--card);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--sh);overflow:hidden;animation:cardIn .2s ease;max-height:320px;overflow-y:auto}
+.si{display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;transition:background .15s}.si:hover{background:var(--bg2)}
+.si img{width:44px;height:44px;border-radius:9px;object-fit:cover;background:var(--bg2)}
+.nav-acts{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nb{background:var(--card);border:1.5px solid var(--bd);color:var(--tx);border-radius:11px;padding:8px 12px;cursor:pointer;font-size:17px;transition:all .2s;position:relative}
+.nb:hover{background:var(--card2);border-color:var(--t)}.nb .bdg{position:absolute;top:-5px;right:-5px;background:var(--er);color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite}
+.nav-user{position:relative;display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 12px;border-radius:50px;background:var(--card);border:1.5px solid var(--bd);transition:all .2s}.nav-user:hover{border-color:var(--t)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--t),var(--p));display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0}
+#nav-uname{font-size:13px;font-weight:800}
+/* VERIFIED */
+.vbadge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#00c9b1,#7c3aed);font-size:11px;margin-left:4px;animation:glow 2s infinite;cursor:default;flex-shrink:0}
+.vbadge::after{content:'✓';color:#fff;font-weight:900;font-size:10px}
+.vbadge.lg{width:26px;height:26px}.vbadge.lg::after{font-size:13px}
+/* USER DROPDOWN */
+.udrop{position:absolute;top:calc(100% + 10px);right:0;background:var(--card);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--sh);min-width:230px;overflow:hidden;animation:cardIn .2s ease;z-index:200}
+.udrop-head{padding:16px 18px;background:var(--bg2);display:flex;align-items:center;gap:12px}
+.udrop-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--t),var(--p));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.udrop-name{font-weight:800;font-size:14px;display:flex;align-items:center}.udrop-role{font-size:11px;color:var(--tx2);margin-top:2px}
+.udi{padding:11px 18px;cursor:pointer;font-size:13px;font-weight:700;transition:background .15s;display:flex;align-items:center;gap:9px}.udi:hover{background:var(--bg2)}.udi.danger{color:var(--er)}.udiv{border-top:1px solid var(--bd);margin:4px 0}
+/* NOTIF PANEL */
+.notif-panel{position:fixed;top:72px;right:24px;z-index:300;background:var(--card);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--sh);width:340px;max-height:460px;overflow:hidden;animation:cardIn .25s ease}
+.np-head{padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.np-head h4{font-size:15px;font-weight:800}.np-head button{background:none;border:none;color:var(--tx2);cursor:pointer;font-size:13px;font-weight:700}
+.np-list{overflow-y:auto;max-height:380px}
+.nitem{padding:14px 20px;border-bottom:1px solid rgba(38,38,74,.5);cursor:pointer;transition:background .15s;animation:slideUp .3s ease}
+.nitem:hover{background:var(--bg2)}.nitem.unread{border-left:3px solid var(--t)}
+.nitem-title{font-size:13px;font-weight:800;margin-bottom:3px}.nitem-body{font-size:12px;color:var(--tx2);line-height:1.5}.nitem-time{font-size:10px;color:var(--tx2);margin-top:4px}
+/* PUSH NOTIF */
+.push-notif{position:fixed;bottom:28px;right:24px;z-index:9000;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px 20px;max-width:340px;box-shadow:var(--sh);display:flex;gap:14px;align-items:flex-start;animation:notifIn .4s cubic-bezier(.34,1.56,.64,1)}
+.push-notif.out{animation:notifOut .3s ease forwards}
+.push-notif-icon{font-size:28px;flex-shrink:0}.push-notif-body h5{font-size:14px;font-weight:800;margin-bottom:3px}.push-notif-body p{font-size:12px;color:var(--tx2)}.push-close{background:none;border:none;color:var(--tx2);cursor:pointer;font-size:16px;margin-left:auto;flex-shrink:0}
+/* CONTENT */
+.content-area{flex:1;padding:24px;max-width:1440px;margin:0 auto;width:100%}
+.sec{display:none;animation:fadeIn .35s ease}.sec.active{display:block}
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--card),rgba(0,201,177,.07));border:1px solid var(--bd);border-radius:26px;padding:50px 46px;display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80%,rgba(0,201,177,.1),transparent 70%);pointer-events:none}
+.hero-txt h1{font-family:'Baloo 2',cursive;font-size:42px;font-weight:800;line-height:1.1;margin-bottom:12px}
+.hero-txt p{color:var(--tx2);font-size:16px;margin-bottom:20px}.hero-art{font-size:95px;animation:float 3.5s ease-in-out infinite;flex-shrink:0}
+.sh{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px}.sh h2{font-size:20px;font-weight:800}.sh a{font-size:13px;color:var(--t);cursor:pointer;font-weight:700}.sh a:hover{text-decoration:underline}
+.ptitle{font-size:28px;font-weight:800;margin-bottom:24px;font-family:'Baloo 2',cursive}
+/* GAMES GRID */
+.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px}
+.gc{background:var(--card);border:1.5px solid var(--bd);border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .24s,border-color .24s,box-shadow .24s;position:relative;display:flex;flex-direction:column}
+.gc:hover{transform:translateY(-7px) scale(1.02);border-color:var(--t);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px var(--t)}
+.gc img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:var(--bg2);-webkit-user-drag:none;user-drag:none;pointer-events:none}
+.gc-info{padding:10px 13px;flex:1;display:flex;flex-direction:column;gap:4px}
+.gc-title{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gc-meta{font-size:11px;color:var(--tx2);display:flex;align-items:center;gap:8px}
+.gc-badge{position:absolute;top:8px;left:8px;color:var(--bg);font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+.gc-badge.feat{background:var(--t)}.gc-badge.pend{background:var(--wa);color:#000}.gc-badge.ban{background:var(--er);color:#fff}
+/* PERF MODE */
+.perf-mode .gc img{image-rendering:pixelated}.perf-mode *{animation:none!important;transition:none!important}.perf-mode .orb{display:none}
+/* CATEGORIES */
+.catg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.catc{background:var(--card);border:1.5px solid var(--bd);border-radius:18px;padding:22px 14px;text-align:center;cursor:pointer;transition:all .22s}.catc:hover{border-color:var(--t);transform:translateY(-5px);background:var(--card2)}
+.catc .ci{font-size:36px;margin-bottom:9px;display:block}.catc .cn{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+/* PROFILE */
+.profile-head{background:var(--card);border:1px solid var(--bd);border-radius:24px;padding:32px;display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.pav{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--t),var(--p));display:flex;align-items:center;justify-content:center;font-size:42px;flex-shrink:0;box-shadow:0 0 0 4px rgba(0,201,177,.2)}
+.pinfo{flex:1}.pinfo h2{font-size:24px;font-weight:800;display:flex;align-items:center;gap:4px}
+.rbadge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:7px}
+.rbadge.admin{background:rgba(239,68,68,.18);color:var(--er);border:1px solid rgba(239,68,68,.3)}
+.rbadge.dev{background:rgba(124,58,237,.18);color:#a78bfa;border:1px solid rgba(124,58,237,.3)}
+.rbadge.player{background:rgba(0,201,177,.18);color:var(--t);border:1px solid rgba(0,201,177,.3)}
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.pstat{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;text-align:center;transition:transform .2s}.pstat:hover{transform:scale(1.04)}
+.pstat span{font-size:30px;font-weight:800;color:var(--t);display:block}.pstat label{font-size:11px;color:var(--tx2);font-weight:700;text-transform:uppercase;margin-top:4px}
+/* TEAM PUBLIC PROFILE */
+.team-profile-hero{background:linear-gradient(135deg,var(--card),rgba(124,58,237,.1));border:1px solid var(--bd);border-radius:24px;padding:36px;display:flex;align-items:center;gap:28px;margin-bottom:24px;position:relative;overflow:hidden}
+.team-profile-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80%,rgba(124,58,237,.1),transparent 70%);pointer-events:none}
+.team-logo-big{width:100px;height:100px;border-radius:22px;object-fit:cover;background:var(--bg2);flex-shrink:0;border:3px solid var(--bd);box-shadow:0 8px 30px rgba(0,0,0,.4);-webkit-user-drag:none;user-drag:none;pointer-events:none}
+.team-info-big h2{font-size:26px;font-weight:800;font-family:'Baloo 2',cursive;display:flex;align-items:center;gap:8px}
+.team-info-big p{color:var(--tx2);margin-top:8px;font-size:14px;line-height:1.6}
+.team-members{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.team-member-chip{background:var(--bg2);border:1px solid var(--bd);border-radius:50px;padding:4px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.team-social-links{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.social-btn{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--tx);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.social-btn:hover{border-color:var(--t);background:rgba(0,201,177,.1)}
+/* GAME PLAYER */
+.glayout{display:grid;grid-template-columns:1fr 235px;gap:20px}
+.gframe-wrap{background:#000;border-radius:20px;overflow:hidden;aspect-ratio:16/9;border:2px solid var(--bd);position:relative}
+#game-iframe{width:100%;height:100%;border:none;display:block}
+.fs-btn{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:9px;padding:7px 11px;cursor:pointer;font-size:19px;transition:all .2s;opacity:.7}
+.fs-btn:hover{opacity:1;background:rgba(0,201,177,.3);border-color:var(--t)}
+/* PERF TOGGLE IN GAME */
+.perf-game-btn{position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);color:var(--tx2);border-radius:9px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s}
+.perf-game-btn.on{border-color:var(--ok);color:var(--ok);background:rgba(34,197,94,.15)}
+.gmeta{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--bd);gap:12px;flex-wrap:wrap}
+.gmeta-l{display:flex;align-items:center;gap:12px}.gcovs{width:50px;height:50px;border-radius:11px;object-fit:cover;background:var(--bg2);pointer-events:none}
+.gmeta-l h3{font-size:17px;font-weight:800}.gmeta-l p{font-size:12px;color:var(--tx2)}
+/* REACTIONS */
+.reactions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.rb{background:var(--card);border:1.5px solid var(--bd);border-radius:50px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:800;color:var(--tx);transition:all .2s;display:flex;align-items:center;gap:6px;user-select:none;position:relative}
+.rb:hover{transform:scale(1.1);background:var(--card2)}.rb.on{border-color:var(--t);background:rgba(0,201,177,.12);color:var(--t)}.rb.on.dis{border-color:var(--er);background:rgba(239,68,68,.12);color:var(--er)}.rb.spin{animation:pop .35s ease}
+.rb-tt{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--bd);border-radius:7px;padding:4px 9px;font-size:11px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}.rb:hover .rb-tt{opacity:1}
+.ginfo-row{display:grid;grid-template-columns:1fr auto;gap:16px;margin-top:16px;align-items:start}
+.gdesc{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px}.gdesc h4{font-size:15px;font-weight:800;margin-bottom:10px}.gdesc p{color:var(--tx2);font-size:14px;line-height:1.7}
+.gtags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.gtag{background:var(--bg2);border:1px solid var(--bd);border-radius:6px;padding:3px 10px;font-size:12px;color:var(--tx2)}
+.gxacts{display:flex;flex-direction:column;gap:8px}
+.xb{background:var(--card);border:1.5px solid var(--bd);border-radius:13px;padding:11px 17px;cursor:pointer;font-size:13px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:8px;white-space:nowrap;transition:all .2s;font-family:'Nunito',sans-serif}.xb:hover{background:var(--card2);border-color:var(--t)}.xb.on{border-color:var(--pk);background:rgba(244,63,94,.1);color:var(--pk)}
+.gside h4{font-size:15px;font-weight:800;margin-bottom:14px}
+.sgame{display:flex;align-items:center;gap:10px;padding:9px;border-radius:13px;cursor:pointer;transition:background .15s;margin-bottom:7px}.sgame:hover{background:var(--card)}
+.sgame img{width:48px;height:48px;border-radius:9px;object-fit:cover;background:var(--bg2);flex-shrink:0;pointer-events:none}.sgame-t{font-size:13px;font-weight:800}.sgame-s{font-size:11px;color:var(--tx2)}
+/* ADMIN CHEAT MODE */
+.cheat-overlay{position:fixed;inset:0;z-index:5000;pointer-events:none}
+.cheat-hud{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:5001;background:rgba(0,0,0,.9);border:2px solid var(--er);border-radius:16px;padding:14px 24px;display:flex;align-items:center;gap:16px;backdrop-filter:blur(10px);animation:cardIn .3s ease}
+.cheat-hud .ch-badge{background:linear-gradient(135deg,var(--er),#ff6600);color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px;animation:pulse 1s infinite}
+.cheat-toggle{background:rgba(239,68,68,.2);border:1px solid var(--er);border-radius:8px;padding:6px 12px;color:var(--er);font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;pointer-events:all}.cheat-toggle:hover{background:rgba(239,68,68,.35)}
+.cheat-toggle.on{background:rgba(34,197,94,.2);border-color:var(--ok);color:var(--ok)}
+/* FULLSCREEN */
+.fsoverlay{position:fixed;inset:0;z-index:2000;background:#000}.fsoverlay iframe{width:100%;height:100%;border:none;display:block}
+.exit-fs{position:fixed;top:16px;right:16px;z-index:2001;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:11px;padding:10px 18px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;transition:all .2s}.exit-fs:hover{background:rgba(239,68,68,.5);border-color:var(--er)}
+/* AD BLOCKER INDICATOR */
+.adblock-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--ok);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:800}
+/* ACHIEVEMENTS */
+.achg{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.achc{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;text-align:center;transition:transform .2s,border-color .2s}.achc:hover{transform:scale(1.04)}.achc.lock{opacity:.35;filter:grayscale(1)}.achc.unlock{border-color:var(--y);box-shadow:0 0 20px rgba(251,191,36,.2)}
+.achc .ai{font-size:44px;margin-bottom:11px;display:block}.achc h4{font-size:14px;font-weight:800}.achc p{font-size:12px;color:var(--tx2);margin-top:4px}
+.ach-prog{background:var(--bg2);border-radius:4px;height:5px;margin-top:10px;overflow:hidden}.ach-prog-fill{height:100%;background:linear-gradient(90deg,var(--t),var(--p));border-radius:4px;transition:width .5s}
+/* SETTINGS */
+.scard{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:26px;margin-bottom:16px}.scard h3{font-size:16px;font-weight:800;margin-bottom:18px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bd);font-size:14px;font-weight:600}.srow:last-child{border-bottom:none}
+.tog{position:relative;width:46px;height:25px;display:inline-block}.tog input{opacity:0;width:0;height:0}.tog span{position:absolute;inset:0;background:var(--bd);border-radius:25px;cursor:pointer;transition:background .2s}.tog span::before{content:'';position:absolute;left:3px;top:3px;width:19px;height:19px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}.tog input:checked+span{background:var(--t)}.tog input:checked+span::before{transform:translateX(21px)}
+/* DEV PANEL */
+.dhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}.dhead h2{font-size:24px;font-weight:800}
+.dteam{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:26px;margin-bottom:28px}
+.tdisp{display:flex;align-items:center;gap:20px}
+.tlogo{width:66px;height:66px;border-radius:18px;object-fit:cover;background:var(--bg2);font-size:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-user-drag:none;pointer-events:none}
+.tinfo h3{font-size:20px;font-weight:800}.tinfo p{color:var(--tx2);font-size:13px;margin-top:4px}.tlock{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ok);margin-top:6px;font-weight:700}
+/* ADMIN */
+.astats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.astat{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;text-align:center;transition:transform .2s,border-color .2s;cursor:default}.astat:hover{transform:translateY(-3px);border-color:var(--t)}
+.astat-n{font-size:34px;font-weight:800;color:var(--t)}.astat-l{font-size:11px;color:var(--tx2);font-weight:700;text-transform:uppercase;margin-top:4px}
+.atabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;border-bottom:2px solid var(--bd);padding-bottom:12px}
+.atab{background:var(--card);border:1.5px solid var(--bd);border-radius:11px;padding:9px 18px;color:var(--tx2);font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;transition:all .2s;font-size:13px}.atab.on,.atab:hover{background:var(--t);color:var(--bg);border-color:var(--t)}
+.acont{display:none}.acont.on{display:block;animation:fadeIn .3s}
+.atable{width:100%;border-collapse:collapse}.atable th{text-align:left;padding:11px 16px;font-size:11px;font-weight:800;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);white-space:nowrap}.atable td{padding:13px 16px;border-bottom:1px solid rgba(38,38,74,.5);font-size:13px;vertical-align:middle}.atable tr:hover td{background:rgba(255,255,255,.02)}
+.abtns{display:flex;gap:6px;flex-wrap:wrap}
+.ab{padding:5px 11px;border-radius:7px;font-size:11px;font-weight:800;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:'Nunito',sans-serif;white-space:nowrap}.ab:hover{transform:scale(1.07)}
+.ab.ban{background:rgba(239,68,68,.15);color:var(--er);border-color:rgba(239,68,68,.3)}.ab.unban{background:rgba(34,197,94,.15);color:var(--ok);border-color:rgba(34,197,94,.3)}.ab.feat{background:rgba(251,191,36,.15);color:var(--y);border-color:rgba(251,191,36,.3)}.ab.ok{background:rgba(34,197,94,.15);color:var(--ok);border-color:rgba(34,197,94,.3)}.ab.rej{background:rgba(239,68,68,.15);color:var(--er);border-color:rgba(239,68,68,.3)}.ab.promo{background:rgba(0,201,177,.15);color:var(--t);border-color:rgba(0,201,177,.3)}.ab.warn{background:rgba(245,158,11,.15);color:var(--wa);border-color:rgba(245,158,11,.3)}.ab.info{background:rgba(124,58,237,.15);color:#a78bfa;border-color:rgba(124,58,237,.3)}
+.pcard{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:16px}.pcard img{width:62px;height:62px;border-radius:11px;object-fit:cover;flex-shrink:0;background:var(--bg2);pointer-events:none}.pc-inf{flex:1}.pc-inf h4{font-size:15px;font-weight:800}.pc-inf p{font-size:12px;color:var(--tx2);margin-top:3px}
+.tcard{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:14px}.tcard-l{display:flex;align-items:center;gap:14px}.tcard-logo{width:52px;height:52px;border-radius:13px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;overflow:hidden}
+.urow{display:flex;align-items:center;gap:10px}.uav{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--t),var(--p));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}.sdot.on{background:var(--ok)}.sdot.off{background:var(--er)}.sdot.pend{background:var(--wa)}
+/* REPORT MODAL */
+.report-option{background:var(--bg2);border:1.5px solid var(--bd);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;margin-bottom:8px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700}.report-option:hover{border-color:var(--er);background:rgba(239,68,68,.08);color:var(--er)}
+/* ADMIN CONTENT EDITOR */
+.content-block{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:20px;margin-bottom:14px;position:relative}
+.content-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.content-block-header h4{font-size:15px;font-weight:800}
+.cb-edit-btn{background:rgba(0,201,177,.15);border:1px solid rgba(0,201,177,.3);color:var(--t);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s}.cb-edit-btn:hover{background:rgba(0,201,177,.25)}
+/* SHARE CARD */
+.share-card{background:linear-gradient(135deg,var(--card),rgba(0,201,177,.1));border:1px solid var(--t);border-radius:18px;padding:20px;text-align:center}
+.share-card .sc-name{font-size:22px;font-weight:900;color:var(--tx);display:flex;align-items:center;justify-content:center;gap:8px}
+.share-card .sc-role{font-size:12px;color:var(--tx2);margin-top:4px}
+.share-card .sc-img{width:80px;height:80px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:42px;background:linear-gradient(135deg,var(--t),var(--p))}
+/* MODALS */
+.modal{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+.mcard{background:var(--card);border:1px solid var(--bd);border-radius:26px;padding:34px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:var(--sh);animation:cardIn .3s ease}
+.mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}.mhead h3{font-size:19px;font-weight:800}.mhead button{background:var(--bg2);border:1px solid var(--bd);color:var(--tx);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .15s}.mhead button:hover{background:var(--card2)}
+/* TOAST */
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--card);border:1px solid var(--bd);border-radius:50px;padding:13px 26px;font-size:14px;font-weight:800;box-shadow:var(--sh);animation:cardIn .3s ease;white-space:nowrap}
+#toast.ok{border-color:var(--ok);color:var(--ok)}#toast.er{border-color:var(--er);color:var(--er)}#toast.info{border-color:var(--t);color:var(--t)}#toast.warn{border-color:var(--wa);color:var(--wa)}
+@media(max-width:900px){.glayout{grid-template-columns:1fr}.gside{display:none}.pstats{grid-template-columns:repeat(2,1fr)}.astats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.topnav{padding:0 14px}.nav-search{display:none}.content-area{padding:14px}.hero{flex-direction:column;text-align:center;padding:28px 20px;gap:20px}.hero-txt h1{font-size:26px}.profile-head{flex-direction:column;text-align:center}.ginfo-row{grid-template-columns:1fr}.gxacts{flex-direction:row;flex-wrap:wrap}.gg{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+</style>
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+  <div class="splash-logo"><span class="lx">nex</span><span class="lp">play</span><div class="splash-tagline">by devs, for everyone</div></div>
+  <div class="splash-btns">
+    <button class="btn-p big" onclick="showLogin()">INICIAR SESIÓN</button>
+    <button class="btn-s big" onclick="showRegister()">REGISTRARSE</button>
   </div>
 </div>
-
 <!-- LOGIN -->
-<div id="login-screen" class="screen hidden">
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-logo"><span class="logo-nx">nex</span><span class="logo-play">play</span></div>
-      <h2>Bienvenido de vuelta</h2>
-      <div class="form-group">
-        <label>Usuario o Email</label>
-        <input type="text" id="login-user" placeholder="Ingresa tu usuario o email" />
-        <div id="login-user-hint" class="ai-hint hidden"></div>
-      </div>
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" id="login-pass" placeholder="Contraseña" />
-      </div>
-      <div id="login-error" class="error-msg hidden"></div>
-      <button class="btn-primary full" onclick="doLogin()">Entrar</button>
-      <p class="switch-auth">¿No tienes cuenta? <a onclick="showRegister()">Regístrate</a></p>
-    </div>
-  </div>
-</div>
-
+<div id="login-screen" class="screen hidden"><div class="auth-bg"><div class="auth-card">
+  <div class="auth-logo"><span class="lx">nex</span><span class="lp">play</span></div>
+  <h2>Bienvenido de vuelta</h2>
+  <div class="fg"><label>Usuario o Email</label><input type="text" id="login-user" placeholder="Tu usuario o email"/></div>
+  <div class="fg"><label>Contraseña</label><input type="password" id="login-pass" placeholder="Contraseña"/></div>
+  <div id="login-error" class="emsg hidden"></div>
+  <button class="btn-p full" onclick="doLogin()">Entrar →</button>
+  <p class="swa">¿No tienes cuenta? <a onclick="showRegister()">Regístrate</a></p>
+</div></div></div>
 <!-- REGISTER -->
-<div id="register-screen" class="screen hidden">
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-logo"><span class="logo-nx">nex</span><span class="logo-play">play</span></div>
-      <h2>Crear cuenta</h2>
-      <div class="form-group">
-        <label>Nombre de usuario <span class="ai-badge">IA</span></label>
-        <input type="text" id="reg-username" placeholder="Ej: GamerPro2024" oninput="checkUsername(this.value)" />
-        <div id="username-feedback" class="ai-hint"></div>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="reg-email" placeholder="tu@email.com" />
-      </div>
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" />
-      </div>
-      <div class="form-group">
-        <label>Rol</label>
-        <select id="reg-role">
-          <option value="player">Jugador</option>
-          <option value="dev">Desarrollador</option>
-        </select>
-      </div>
-      <div id="reg-error" class="error-msg hidden"></div>
-      <button class="btn-primary full" onclick="doRegister()">Crear cuenta</button>
-      <p class="switch-auth">¿Ya tienes cuenta? <a onclick="showLogin()">Inicia sesión</a></p>
+<div id="register-screen" class="screen hidden"><div class="auth-bg"><div class="auth-card">
+  <div class="auth-logo"><span class="lx">nex</span><span class="lp">play</span></div>
+  <h2>Crear cuenta</h2>
+  <div class="fg"><label>Usuario <span class="aib">IA</span></label><input type="text" id="reg-un" placeholder="Ej: GamerPro99" oninput="checkUN(this.value)"/><div id="un-fb" class="aih"></div></div>
+  <div class="fg"><label>Email</label><input type="email" id="reg-em" placeholder="tu@email.com"/></div>
+  <div class="fg"><label>Contraseña</label><input type="password" id="reg-pw" placeholder="Mínimo 6 caracteres"/></div>
+  <div class="fg"><label>Rol</label><select id="reg-role"><option value="player">🕹️ Jugador</option><option value="dev">🎮 Desarrollador</option></select></div>
+  <div id="reg-error" class="emsg hidden"></div>
+  <button class="btn-p full" onclick="doRegister()">Crear cuenta →</button>
+  <p class="swa">¿Ya tienes cuenta? <a onclick="showLogin()">Inicia sesión</a></p>
+</div></div></div>
+<!-- WELCOME -->
+<div id="welcome-screen" class="screen hidden"><div class="welcome-bg">
+  <div class="wcard" id="ws1">
+    <span class="wemoji">🎮</span>
+    <h1>¡Bienvenido, <span id="wname" class="gtx"></span>!</h1>
+    <p id="wmsg">Nos alegra tenerte. Aquí encontrarás miles de juegos, comunidad activa y mucho más.</p>
+    <div class="wfeatures">
+      <div class="wf"><span>🕹️</span><div><strong>Miles de juegos</strong><small>Gratis en tu navegador</small></div></div>
+      <div class="wf"><span>👥</span><div><strong>Comunidad</strong><small>Jugadores globales</small></div></div>
+      <div class="wf"><span>🏆</span><div><strong>Rankings</strong><small>Compite y destaca</small></div></div>
+      <div class="wf"><span>🛡️</span><div><strong>Ad Blocker</strong><small>Sin anuncios molestos</small></div></div>
     </div>
+    <button class="btn-p big" onclick="wnext()">Siguiente →</button>
   </div>
-</div>
-
-<!-- WELCOME FLOW -->
-<div id="welcome-screen" class="screen hidden">
-  <div class="welcome-overlay">
-    <div class="welcome-card" id="welcome-step-1">
-      <div class="welcome-emoji">🎮</div>
-      <h1 id="welcome-title">¡Bienvenido, <span id="welcome-name"></span>!</h1>
-      <p id="welcome-msg">Nos alegra tenerte en NexPlay. Aquí encontrarás miles de juegos, podrás conectar con otros jugadores y mucho más.</p>
-      <div class="welcome-features">
-        <div class="wf-item"><span>🕹️</span> Miles de juegos gratis</div>
-        <div class="wf-item"><span>👥</span> Comunidad activa</div>
-        <div class="wf-item"><span>🏆</span> Rankings y logros</div>
-        <div class="wf-item"><span>🔥</span> Juegos destacados</div>
-      </div>
-      <button class="btn-primary big" onclick="welcomeNext()">Siguiente →</button>
+  <div class="wcard hidden" id="ws2">
+    <span class="wemoji">📋</span><h2>Términos y Condiciones</h2>
+    <div class="terms-box">
+      <h3>NexPlay — Términos de Uso</h3>
+      <p><strong>1. Responsabilidad:</strong> El usuario es responsable de su cuenta. NexPlay <u>NO se hace responsable</u> por robo, hackeo o pérdida de acceso.</p>
+      <p><strong>2. Contenido:</strong> Los juegos son responsabilidad de sus desarrolladores. NexPlay es una plataforma intermediaria.</p>
+      <p><strong>3. Conducta:</strong> Prohibido lenguaje ofensivo, acoso y spam.</p>
+      <p><strong>4. Menores:</strong> Menores de 13 años necesitan autorización de tutor.</p>
+      <p><strong>5. Datos:</strong> Recopilamos datos básicos para mejorar la experiencia. No los vendemos.</p>
+      <p class="tdiscl">⚠️ NexPlay NO se responsabiliza por pérdida/robo de cuentas, daños de juegos de terceros ni interrupciones del servicio.</p>
     </div>
-    <div class="welcome-card hidden" id="welcome-step-2">
-      <div class="welcome-emoji">📋</div>
-      <h2>Términos y Condiciones</h2>
-      <div class="terms-box">
-        <h3>NexPlay — Términos de Uso</h3>
-        <p><strong>1. Responsabilidad de cuenta:</strong> El usuario es responsable de la seguridad de su cuenta. NexPlay <u>NO se hace responsable</u> por robo, hackeo o pérdida de acceso a cuentas.</p>
-        <p><strong>2. Contenido:</strong> Los juegos publicados son responsabilidad de sus desarrolladores. NexPlay actúa como plataforma intermediaria.</p>
-        <p><strong>3. Conducta:</strong> Queda prohibido el uso de lenguaje ofensivo, acoso, o cualquier conducta que perjudique a otros usuarios.</p>
-        <p><strong>4. Menores:</strong> Si eres menor de 13 años, necesitas autorización de un tutor legal.</p>
-        <p><strong>5. Datos:</strong> NexPlay recopila datos básicos para mejorar la experiencia. No vendemos tu información.</p>
-        <p><strong>6. Cambios:</strong> Nos reservamos el derecho de modificar estos términos con previo aviso.</p>
-        <p class="terms-disclaimer">⚠️ NexPlay NO se responsabiliza por: pérdida de cuentas, robo de credenciales, daños derivados del uso de juegos de terceros, ni por interrupciones del servicio.</p>
-      </div>
-      <label class="checkbox-label">
-        <input type="checkbox" id="terms-check" /> Acepto los términos y condiciones
-      </label>
-      <button class="btn-primary big" onclick="acceptTerms()">Aceptar y Continuar →</button>
-    </div>
+    <label class="cklabel"><input type="checkbox" id="tcheck"/> Acepto los términos y condiciones</label>
+    <button class="btn-p big" onclick="acceptTerms()">Aceptar y Entrar →</button>
   </div>
-</div>
-
+</div></div>
 <!-- MAIN APP -->
 <div id="main-app" class="screen hidden">
-  <!-- TOP NAV -->
-  <nav class="topnav">
-    <div class="nav-logo" onclick="goHome()"><span class="logo-nx">nex</span><span class="logo-play">play</span></div>
-    <div class="nav-search">
-      <input type="text" id="search-input" placeholder="🔍 Buscar juegos..." oninput="searchGames(this.value)" />
-      <div id="search-results" class="search-dropdown hidden"></div>
-    </div>
-    <div class="nav-actions">
-      <button class="nav-btn" onclick="showSection('home')">🏠</button>
-      <button class="nav-btn" onclick="showSection('categories')">🎯</button>
-      <button class="nav-btn" id="dev-btn" onclick="showSection('dev')" style="display:none">⚙️ Dev</button>
-      <div class="nav-user" onclick="toggleUserMenu()">
-        <div class="avatar" id="nav-avatar"></div>
-        <span id="nav-username-display"></span>
-        <div class="user-dropdown" id="user-dropdown">
-          <div class="ud-item" onclick="showSection('profile')">👤 Mi Perfil</div>
-          <div class="ud-item" onclick="showSection('favorites')">❤️ Favoritos</div>
-          <div class="ud-item" onclick="showSection('history')">🕑 Historial</div>
-          <div class="ud-item" id="admin-link" onclick="showSection('admin')" style="display:none">🛡️ Panel Admin</div>
-          <div class="ud-item" id="dev-link" onclick="showSection('dev')" style="display:none">🎮 Panel Dev</div>
-          <div class="ud-divider"></div>
-          <div class="ud-item logout" onclick="doLogout()">🚪 Cerrar sesión</div>
-        </div>
+<nav class="topnav">
+  <div class="nav-logo" onclick="goHome()"><span class="lx">nex</span><span class="lp">play</span></div>
+  <div class="nav-search"><input type="text" id="sinput" placeholder="🔍 Buscar juegos..." oninput="doSearch(this.value)"/><div id="sdrop" class="sdrop hidden"></div></div>
+  <div class="nav-acts">
+    <button class="nb" onclick="showSection('home')" title="🏠 Inicio">🏠</button>
+    <button class="nb" onclick="showSection('categories')" title="Categorías">🎯</button>
+    <button class="nb" id="notif-btn" onclick="toggleNotifPanel()" title="Notificaciones">🔔<span class="bdg hidden" id="nbdg">0</span></button>
+    <span class="adblock-badge" title="Ad Blocker activo">🛡️ AdBlock</span>
+    <button class="nb" id="dev-btn" onclick="showSection('dev')" style="display:none" title="Dev">⚙️</button>
+    <div class="nav-user" onclick="toggleUD()">
+      <div class="avatar" id="nav-av"></div>
+      <span id="nav-uname"></span>
+      <span id="nav-vbadge"></span>
+      <small>▾</small>
+      <div class="udrop hidden" id="udrop">
+        <div class="udrop-head"><div class="udrop-av" id="udrop-av"></div><div><div class="udrop-name" id="udrop-name"></div><div class="udrop-role" id="udrop-role"></div></div></div>
+        <div class="udiv"></div>
+        <div class="udi" onclick="showSection('profile')">👤 Mi Perfil</div>
+        <div class="udi" onclick="showSection('favorites')">❤️ Favoritos</div>
+        <div class="udi" onclick="showSection('history')">🕑 Historial</div>
+        <div class="udi" onclick="showSection('achievements')">🏆 Logros</div>
+        <div class="udi" onclick="showSection('settings')">⚙️ Configuración</div>
+        <div class="udi" id="admin-link" onclick="showSection('admin')" style="display:none">🛡️ Panel Admin</div>
+        <div class="udi" id="dev-link" onclick="showSection('dev')" style="display:none">🎮 Panel Dev</div>
+        <div class="udiv"></div>
+        <div class="udi danger" onclick="doLogout()">🚪 Cerrar sesión</div>
       </div>
     </div>
-  </nav>
-
-  <!-- CONTENT AREA -->
-  <div class="content-area">
-
-    <!-- HOME -->
-    <section id="section-home" class="section active">
-      <div class="hero-banner">
-        <div class="hero-text">
-          <h1>Juega. Compite. <span class="gradient-text">Domina.</span></h1>
-          <p>Miles de juegos gratis directamente en tu navegador</p>
-        </div>
-        <div class="hero-art">🎮</div>
-      </div>
-      <div class="section-header"><h2>🔥 Destacados</h2></div>
-      <div class="games-grid" id="featured-games"></div>
-      <div class="section-header"><h2>🆕 Nuevos</h2></div>
-      <div class="games-grid" id="new-games"></div>
-      <div class="section-header"><h2>🏆 Populares</h2></div>
-      <div class="games-grid" id="popular-games"></div>
-    </section>
-
-    <!-- CATEGORIES -->
-    <section id="section-categories" class="section">
-      <h2 class="page-title">Categorías</h2>
-      <div class="categories-grid" id="categories-grid"></div>
-    </section>
-
-    <!-- PROFILE -->
-    <section id="section-profile" class="section">
-      <div class="profile-header">
-        <div class="profile-avatar-big" id="profile-avatar-big"></div>
-        <div class="profile-info">
-          <h2 id="profile-username-big"></h2>
-          <span class="role-badge" id="profile-role-badge"></span>
-          <p id="profile-joined"></p>
-        </div>
-        <button class="btn-secondary" onclick="showEditProfile()">✏️ Editar Perfil</button>
-      </div>
-      <div class="profile-stats">
-        <div class="stat"><span id="stat-played">0</span><label>Jugados</label></div>
-        <div class="stat"><span id="stat-likes">0</span><label>Me gusta dados</label></div>
-        <div class="stat"><span id="stat-favs">0</span><label>Favoritos</label></div>
-      </div>
-      <div class="section-header"><h2>🎮 Juegos recientes</h2></div>
-      <div class="games-grid" id="profile-recent-games"></div>
-    </section>
-
-    <!-- FAVORITES -->
-    <section id="section-favorites" class="section">
-      <h2 class="page-title">❤️ Mis Favoritos</h2>
-      <div class="games-grid" id="favorites-grid"></div>
-    </section>
-
-    <!-- HISTORY -->
-    <section id="section-history" class="section">
-      <h2 class="page-title">🕑 Historial</h2>
-      <div class="games-grid" id="history-grid"></div>
-    </section>
-
-    <!-- GAME PLAYER -->
-    <section id="section-game" class="section">
-      <div class="game-layout">
-        <div class="game-main">
-          <div class="game-frame-wrap">
-            <iframe id="game-iframe" src="" allowfullscreen></iframe>
-          </div>
-          <div class="game-meta">
-            <div class="game-meta-left">
-              <img class="game-cover-sm" id="gm-cover" src="" />
-              <div>
-                <h3 id="gm-title"></h3>
-                <p id="gm-dev"></p>
-              </div>
-            </div>
-            <div class="game-actions">
-              <button class="react-btn like-btn" id="gm-like" onclick="reactGame('like')"><span>👍</span><span id="gm-likes">0</span></button>
-              <button class="react-btn dislike-btn" id="gm-dislike" onclick="reactGame('dislike')"><span>👎</span><span id="gm-dislikes">0</span></button>
-              <button class="react-btn" onclick="reactGame('fire')">🔥</button>
-              <button class="react-btn" onclick="reactGame('wow')">😮</button>
-              <button class="react-btn fav-btn" id="gm-fav" onclick="toggleFavorite()">❤️</button>
-              <button class="react-btn" onclick="shareGame()">🔗</button>
-              <button class="react-btn" onclick="reportGame()">🚩</button>
-            </div>
-          </div>
-          <div class="game-desc-box">
-            <h4>Descripción</h4>
-            <p id="gm-desc"></p>
-            <div class="game-tags" id="gm-tags"></div>
-          </div>
-        </div>
-        <div class="game-sidebar">
-          <h4>Más juegos</h4>
-          <div id="sidebar-games"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- DEV PANEL -->
-    <section id="section-dev" class="section">
-      <div class="dev-header">
-        <h2>🎮 Panel de Desarrollador</h2>
-        <button class="btn-primary" onclick="showPublishGame()">+ Publicar Juego</button>
-      </div>
-      <div class="dev-team-box" id="dev-team-box"></div>
-      <div class="section-header"><h2>Mis Juegos</h2></div>
-      <div class="games-grid" id="dev-games-grid"></div>
-
-      <!-- PUBLISH FORM -->
-      <div id="publish-form" class="modal hidden">
-        <div class="modal-card">
-          <div class="modal-header">
-            <h3>Publicar Nuevo Juego</h3>
-            <button onclick="closeModal('publish-form')">✕</button>
-          </div>
-          <div class="form-group">
-            <label>Nombre del juego</label>
-            <input type="text" id="pub-name" placeholder="Nombre del juego" />
-          </div>
-          <div class="form-group">
-            <label>Descripción</label>
-            <textarea id="pub-desc" placeholder="Describe tu juego..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>URL del juego (HTML5)</label>
-            <input type="url" id="pub-url" placeholder="https://..." />
-          </div>
-          <div class="form-group">
-            <label>URL de portada</label>
-            <input type="url" id="pub-cover" placeholder="https://...imagen.jpg" />
-          </div>
-          <div class="form-group">
-            <label>Categoría</label>
-            <select id="pub-category">
-              <option>Acción</option><option>Puzzle</option><option>Aventura</option>
-              <option>Deportes</option><option>Carreras</option><option>Plataformas</option>
-              <option>Multijugador</option><option>Casual</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Tags (separados por comas)</label>
-            <input type="text" id="pub-tags" placeholder="ej: acción, 2D, pixel art" />
-          </div>
-          <button class="btn-primary full" onclick="submitGame()">📤 Enviar para revisión</button>
-        </div>
-      </div>
-
-      <!-- TEAM SETUP -->
-      <div id="team-form" class="modal hidden">
-        <div class="modal-card">
-          <div class="modal-header">
-            <h3>Configurar Mi Equipo</h3>
-            <button onclick="closeModal('team-form')">✕</button>
-          </div>
-          <div class="form-group">
-            <label>Nombre del equipo</label>
-            <input type="text" id="team-name" placeholder="Nombre del estudio o equipo" />
-          </div>
-          <div class="form-group">
-            <label>Descripción</label>
-            <textarea id="team-desc" placeholder="Describe tu equipo..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>URL del logo</label>
-            <input type="url" id="team-logo" placeholder="https://...logo.png" />
-          </div>
-          <div class="form-group">
-            <label>Contraseña de protección del equipo</label>
-            <input type="password" id="team-pw" placeholder="Protege tu equipo" />
-          </div>
-          <button class="btn-primary full" onclick="saveTeam()">💾 Guardar Equipo</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ADMIN PANEL -->
-    <section id="section-admin" class="section">
-      <h2 class="page-title">🛡️ Panel de Administración</h2>
-      <div class="admin-tabs">
-        <button class="atab active" onclick="adminTab('users')">👥 Usuarios</button>
-        <button class="atab" onclick="adminTab('games')">🎮 Juegos</button>
-        <button class="atab" onclick="adminTab('teams')">🏢 Equipos</button>
-        <button class="atab" onclick="adminTab('pending')">⏳ Pendientes</button>
-      </div>
-      <div id="admin-users" class="admin-content active"></div>
-      <div id="admin-games" class="admin-content"></div>
-      <div id="admin-teams" class="admin-content"></div>
-      <div id="admin-pending" class="admin-content"></div>
-    </section>
-
-  </div><!-- end content-area -->
-</div><!-- end main-app -->
-
-<!-- EDIT PROFILE MODAL -->
-<div id="edit-profile-modal" class="modal hidden">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h3>Editar Perfil</h3>
-      <button onclick="closeModal('edit-profile-modal')">✕</button>
-    </div>
-    <div class="form-group">
-      <label>Nombre de usuario</label>
-      <input type="text" id="edit-username" />
-    </div>
-    <div class="form-group">
-      <label>Bio</label>
-      <textarea id="edit-bio" placeholder="Cuéntanos algo sobre ti..."></textarea>
-    </div>
-    <div class="form-group">
-      <label>Avatar (emoji)</label>
-      <input type="text" id="edit-avatar" placeholder="🎮" maxlength="2" />
-    </div>
-    <button class="btn-primary full" onclick="saveProfile()">Guardar</button>
   </div>
+</nav>
+<div id="notif-panel" class="notif-panel hidden">
+  <div class="np-head"><h4>🔔 Notificaciones</h4><button onclick="markAllRead()">Marcar todas leídas</button></div>
+  <div class="np-list" id="np-list"></div>
+</div>
+<div class="content-area">
+
+<!-- HOME -->
+<section id="sec-home" class="sec active">
+  <div class="hero"><div class="hero-txt"><h1>Juega. Compite. <span class="gtx">Domina.</span></h1><p>Miles de juegos gratis directo en tu navegador</p><button class="btn-p" onclick="showSection('categories')">Explorar juegos →</button></div><div class="hero-art">🎮</div></div>
+  <div class="sh"><h2>🔥 Destacados</h2><a onclick="renderFilteredHome('featured')">Ver todos →</a></div><div class="gg" id="featured-games"></div>
+  <div class="sh"><h2>🆕 Recientes</h2><a onclick="renderFilteredHome('new')">Ver todos →</a></div><div class="gg" id="new-games"></div>
+  <div class="sh"><h2>🏆 Populares</h2><a onclick="renderFilteredHome('popular')">Ver todos →</a></div><div class="gg" id="popular-games"></div>
+  <div id="home-custom-blocks"></div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="sec-categories" class="sec">
+  <h2 class="ptitle">🎯 Categorías</h2><div class="catg" id="catg"></div>
+  <div id="cat-results" class="hidden"><div class="sh" style="margin-top:32px"><h2 id="cat-title"></h2><a onclick="document.getElementById('cat-results').classList.add('hidden')">← Volver</a></div><div class="gg" id="cat-gg"></div></div>
+</section>
+
+<!-- PROFILE -->
+<section id="sec-profile" class="sec">
+  <div class="profile-head">
+    <div class="pav" id="pav"></div>
+    <div class="pinfo"><h2 id="p-uname"></h2><span class="rbadge" id="p-rbadge"></span><p style="color:var(--tx2);font-size:13px;margin-top:8px" id="p-joined"></p><p style="color:var(--tx2);font-size:14px;margin-top:4px" id="p-bio"></p></div>
+    <button class="btn-s" onclick="showEditProfile()">✏️ Editar</button>
+  </div>
+  <div class="pstats">
+    <div class="pstat"><span id="s-played">0</span><label>Jugados</label></div>
+    <div class="pstat"><span id="s-likes">0</span><label>Me gusta</label></div>
+    <div class="pstat"><span id="s-favs">0</span><label>Favoritos</label></div>
+    <div class="pstat"><span id="s-sess">0</span><label>Sesiones</label></div>
+  </div>
+  <div class="sh"><h2>🎮 Recientes</h2></div><div class="gg" id="p-recent"></div>
+</section>
+
+<!-- TEAM PUBLIC PROFILE -->
+<section id="sec-team-profile" class="sec">
+  <div id="team-profile-content"></div>
+</section>
+
+<!-- FAVORITES / HISTORY / ACHIEVEMENTS / SETTINGS (stubs filled by JS) -->
+<section id="sec-favorites" class="sec"><h2 class="ptitle">❤️ Mis Favoritos</h2><div class="gg" id="fav-gg"></div></section>
+<section id="sec-history" class="sec"><h2 class="ptitle">🕑 Historial</h2><div class="gg" id="hist-gg"></div></section>
+<section id="sec-achievements" class="sec"><h2 class="ptitle">🏆 Mis Logros</h2><div class="achg" id="achg"></div></section>
+<section id="sec-settings" class="sec">
+  <h2 class="ptitle">⚙️ Configuración</h2>
+  <div class="scard"><h3>🎨 Preferencias</h3>
+    <div class="srow"><span>Notificaciones push</span><label class="tog"><input type="checkbox" id="tog-notif" checked><span></span></label></div>
+    <div class="srow"><span>Modo rendimiento (PC antigua)</span><label class="tog"><input type="checkbox" id="tog-perf" onchange="togglePerfMode(this.checked)"><span></span></label></div>
+    <div class="srow"><span>Bloqueador de anuncios</span><label class="tog"><input type="checkbox" id="tog-adblock" checked><span></span></label></div>
+    <div class="srow"><span>Animaciones reducidas</span><label class="tog"><input type="checkbox" id="tog-anim" onchange="toggleAnimations(this.checked)"><span></span></label></div>
+    <div class="srow"><span>Modo compacto</span><label class="tog"><input type="checkbox" id="tog-compact" onchange="toggleCompact(this.checked)"><span></span></label></div>
+  </div>
+  <div class="scard"><h3>🔐 Cuenta</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+      <button class="btn-s" onclick="showEditProfile()">✏️ Editar perfil</button>
+      <button class="btn-s" onclick="showModal('change-pw-modal')">🔑 Cambiar contraseña</button>
+      <button class="ab ban" onclick="confirmDeleteAccount()" style="padding:10px 18px;font-size:13px">🗑️ Eliminar cuenta</button>
+    </div>
+  </div>
+</section>
+
+<!-- GAME PLAYER -->
+<section id="sec-game" class="sec">
+  <div class="glayout">
+    <div class="gmain">
+      <div class="gframe-wrap" id="gframe-wrap">
+        <iframe id="game-iframe" src="about:blank" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+        <button class="fs-btn" onclick="openFS()" title="Pantalla completa">⛶</button>
+        <button class="perf-game-btn" id="perf-game-btn" onclick="toggleGamePerf()">⚡ Modo Rápido</button>
+      </div>
+      <div class="gmeta">
+        <div class="gmeta-l"><img class="gcovs" id="gm-cov" src="" alt=""/><div><h3 id="gm-title"></h3><p id="gm-dev"></p></div></div>
+        <div class="reactions" id="reactions-bar"></div>
+      </div>
+      <div class="ginfo-row">
+        <div class="gdesc"><h4>📝 Descripción</h4><p id="gm-desc"></p><div class="gtags" id="gm-tags"></div></div>
+        <div class="gxacts">
+          <button class="xb" id="fav-btn" onclick="toggleFav()">❤️ Favorito</button>
+          <button class="xb" onclick="shareGame()">📤 Compartir</button>
+          <button class="xb" onclick="showReportModal()">🚩 Reportar</button>
+          <button class="xb" onclick="addToList()">📋 Mi lista</button>
+          <button class="xb" onclick="viewTeamFromGame()">🏢 Ver equipo</button>
+          <button class="xb" id="cheat-btn" onclick="toggleCheat()" style="display:none">💀 Admin Mod</button>
+        </div>
+      </div>
+    </div>
+    <div class="gside"><h4>🎮 Más juegos</h4><div id="sgames"></div></div>
+  </div>
+</section>
+
+<!-- DEV PANEL -->
+<section id="sec-dev" class="sec">
+  <div class="dhead"><h2>🎮 Panel de Desarrollador</h2><button class="btn-p" onclick="showModal('pub-modal')">+ Publicar Juego</button></div>
+  <div class="dteam" id="dteam"></div>
+  <div class="sh"><h2>📦 Mis Juegos</h2></div>
+  <div class="gg" id="dev-gg"></div>
+</section>
+
+<!-- ADMIN PANEL -->
+<section id="sec-admin" class="sec">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <h2 class="ptitle" style="margin-bottom:0">🛡️ Panel Admin</h2>
+    <span class="vbadge lg" title="NexPlay Admin Verificado"></span>
+    <span style="background:linear-gradient(135deg,var(--t),var(--p));color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:900;margin-left:auto">NEXPLAY OFFICIAL</span>
+  </div>
+  <div class="astats" id="astats"></div>
+  <div class="atabs">
+    <button class="atab on" onclick="adminTab(this,'ausers')">👥 Usuarios</button>
+    <button class="atab" onclick="adminTab(this,'agames')">🎮 Juegos</button>
+    <button class="atab" onclick="adminTab(this,'ateams')">🏢 Equipos</button>
+    <button class="atab" onclick="adminTab(this,'apending')">⏳ Pendientes</button>
+    <button class="atab" onclick="adminTab(this,'areports')">🚩 Reportes</button>
+    <button class="atab" onclick="adminTab(this,'alogs')">📋 Logs</button>
+    <button class="atab" onclick="adminTab(this,'anotifs')">📣 Notificaciones</button>
+    <button class="atab" onclick="adminTab(this,'acontent')">✏️ Contenido</button>
+    <button class="atab" onclick="adminTab(this,'asettings')">🔧 Config</button>
+  </div>
+  <div id="ausers" class="acont on"></div>
+  <div id="agames" class="acont"></div>
+  <div id="ateams" class="acont"></div>
+  <div id="apending" class="acont"></div>
+  <div id="areports" class="acont"></div>
+  <div id="alogs" class="acont"></div>
+  <div id="anotifs" class="acont"></div>
+  <div id="acontent" class="acont"></div>
+  <div id="asettings" class="acont"></div>
+</section>
+
+</div><!-- content-area -->
+</div><!-- main-app -->
+
+<!-- MODALS -->
+<!-- EDIT PROFILE -->
+<div id="edit-profile-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>✏️ Editar Perfil</h3><button onclick="closeModal('edit-profile-modal')">✕</button></div>
+  <div class="fg"><label>Nombre de usuario</label><input type="text" id="edit-un"/></div>
+  <div class="fg"><label>Bio</label><textarea id="edit-bio" placeholder="Cuéntanos de ti..."></textarea></div>
+  <div class="fg"><label>Avatar (emoji)</label><input type="text" id="edit-av" placeholder="🎮" maxlength="2"/></div>
+  <button class="btn-p full" onclick="saveProfile()">💾 Guardar</button>
+</div></div>
+
+<!-- CHANGE PW -->
+<div id="change-pw-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>🔑 Cambiar Contraseña</h3><button onclick="closeModal('change-pw-modal')">✕</button></div>
+  <div class="fg"><label>Contraseña actual</label><input type="password" id="cpw-old"/></div>
+  <div class="fg"><label>Nueva contraseña</label><input type="password" id="cpw-new"/></div>
+  <div class="fg"><label>Confirmar</label><input type="password" id="cpw-conf"/></div>
+  <div id="cpw-err" class="emsg hidden"></div>
+  <button class="btn-p full" onclick="changePW()">🔑 Cambiar</button>
+</div></div>
+
+<!-- PUBLISH GAME -->
+<div id="pub-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>📤 Publicar Juego</h3><button onclick="closeModal('pub-modal')">✕</button></div>
+  <div class="fg"><label>Nombre del juego *</label><input type="text" id="pub-name" placeholder="Nombre del juego"/></div>
+  <div class="fg"><label>Descripción *</label><textarea id="pub-desc" placeholder="Describe tu juego..."></textarea></div>
+  <div class="fg"><label>URL del juego (HTML5) *</label><input type="url" id="pub-url" placeholder="https://..."/></div>
+  <div class="fg">
+    <label>Portada del juego</label>
+    <div class="file-upload-area" id="pub-cover-area" ondragover="dragOver(event,'pub-cover-area')" ondragleave="dragLeave('pub-cover-area')" ondrop="dropFile(event,'pub-cover-preview','pub-cover-data')">
+      <input type="file" accept="image/*" onchange="previewImg(this,'pub-cover-preview','pub-cover-data')"/>
+      <span class="up-icon">🖼️</span>
+      <div class="up-text">Haz clic o arrastra la imagen</div>
+      <div class="up-sub">JPG, PNG, WebP — máx 5MB</div>
+      <img id="pub-cover-preview" class="img-preview" alt=""/>
+    </div>
+    <input type="hidden" id="pub-cover-data"/>
+  </div>
+  <div class="fg"><label>Categoría</label>
+    <select id="pub-cat"><option>Acción</option><option>Puzzle</option><option>Aventura</option><option>Deportes</option><option>Carreras</option><option>Plataformas</option><option>Multijugador</option><option>Casual</option><option>Estrategia</option><option>RPG</option><option>Terror</option></select>
+  </div>
+  <div class="fg"><label>Tags (separados por comas)</label><input type="text" id="pub-tags" placeholder="acción, 2D, pixel art"/></div>
+  <button class="btn-p full" onclick="submitGame()">📤 Enviar para revisión</button>
+</div></div>
+
+<!-- TEAM MODAL -->
+<div id="team-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>🏢 Mi Equipo</h3><button onclick="closeModal('team-modal')">✕</button></div>
+  <div class="fg"><label>Nombre del equipo *</label><input type="text" id="tm-name" placeholder="Nombre del estudio"/></div>
+  <div class="fg"><label>Descripción</label><textarea id="tm-desc" placeholder="Describe tu equipo..."></textarea></div>
+  <div class="fg">
+    <label>Logo del equipo</label>
+    <div class="file-upload-area" id="tm-logo-area" ondragover="dragOver(event,'tm-logo-area')" ondragleave="dragLeave('tm-logo-area')" ondrop="dropFile(event,'tm-logo-preview','tm-logo-data')">
+      <input type="file" accept="image/*" onchange="previewImg(this,'tm-logo-preview','tm-logo-data')"/>
+      <span class="up-icon">🖼️</span>
+      <div class="up-text">Haz clic o arrastra el logo</div>
+      <div class="up-sub">JPG, PNG, WebP — máx 2MB</div>
+      <img id="tm-logo-preview" class="img-preview" alt=""/>
+    </div>
+    <input type="hidden" id="tm-logo-data"/>
+  </div>
+  <div class="fg"><label>Miembros (separados por comas)</label><input type="text" id="tm-members" placeholder="Juan, Leo, María..."/></div>
+  <div class="fg"><label>Twitter/X</label><input type="text" id="tm-twitter" placeholder="@equipo"/></div>
+  <div class="fg"><label>YouTube</label><input type="url" id="tm-youtube" placeholder="https://youtube.com/..."/></div>
+  <div class="fg"><label>Sitio web</label><input type="url" id="tm-web" placeholder="https://..."/></div>
+  <div class="fg"><label>Contraseña de protección del equipo</label><input type="password" id="tm-pw" placeholder="Contraseña"/></div>
+  <button class="btn-p full" onclick="saveTeam()">💾 Guardar Equipo</button>
+</div></div>
+
+<!-- REPORT MODAL -->
+<div id="report-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>🚩 Reportar</h3><button onclick="closeModal('report-modal')">✕</button></div>
+  <p style="color:var(--tx2);font-size:14px;margin-bottom:16px">Selecciona el motivo del reporte:</p>
+  <div id="report-options"></div>
+  <div class="fg" style="margin-top:12px"><label>Detalles adicionales (opcional)</label><textarea id="report-detail" placeholder="Describe el problema..."></textarea></div>
+  <button class="btn-p full" onclick="submitReport()">📤 Enviar reporte</button>
+</div></div>
+
+<!-- REPORT USER MODAL -->
+<div id="report-user-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>🚩 Reportar Usuario</h3><button onclick="closeModal('report-user-modal')">✕</button></div>
+  <p style="color:var(--tx2);font-size:14px;margin-bottom:16px">Usuario: <strong id="report-user-name"></strong></p>
+  <div class="report-option" onclick="sendUserReport('spam')">📧 Spam / Publicidad</div>
+  <div class="report-option" onclick="sendUserReport('acoso')">😡 Acoso / Bullying</div>
+  <div class="report-option" onclick="sendUserReport('contenido')">🔞 Contenido inapropiado</div>
+  <div class="report-option" onclick="sendUserReport('fraude')">💸 Fraude / Estafa</div>
+  <div class="report-option" onclick="sendUserReport('otro')">❓ Otro motivo</div>
+</div></div>
+
+<!-- SHARE MODAL -->
+<div id="share-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>📤 Compartir</h3><button onclick="closeModal('share-modal')">✕</button></div>
+  <div id="share-content"></div>
+  <button class="btn-p full" style="margin-top:16px" onclick="copyShareContent()">📋 Copiar</button>
+</div></div>
+
+<!-- ADMIN CREDS -->
+<div id="admin-creds-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>🔧 Cambiar Credenciales Admin</h3><button onclick="closeModal('admin-creds-modal')">✕</button></div>
+  <div class="fg"><label>Nuevo usuario</label><input type="text" id="ac-user"/></div>
+  <div class="fg"><label>Nueva contraseña</label><input type="password" id="ac-pw"/></div>
+  <div class="fg"><label>Confirmar contraseña</label><input type="password" id="ac-pw2"/></div>
+  <div id="ac-err" class="emsg hidden"></div>
+  <button class="btn-p full" onclick="changeAdminCreds()">💾 Guardar</button>
+</div></div>
+
+<!-- SEND NOTIF -->
+<div id="send-notif-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3>📣 Enviar Notificación Global</h3><button onclick="closeModal('send-notif-modal')">✕</button></div>
+  <div class="fg"><label>Título</label><input type="text" id="sn-title"/></div>
+  <div class="fg"><label>Mensaje</label><textarea id="sn-body"></textarea></div>
+  <div class="fg"><label>Ícono (emoji)</label><input type="text" id="sn-icon" placeholder="🔔" maxlength="2"/></div>
+  <div class="fg"><label>Destino</label><select id="sn-target"><option value="all">Todos</option><option value="devs">Desarrolladores</option><option value="players">Jugadores</option></select></div>
+  <button class="btn-p full" onclick="sendGlobalNotif()">📣 Enviar</button>
+</div></div>
+
+<!-- CONTENT EDITOR MODAL -->
+<div id="content-editor-modal" class="modal hidden"><div class="mcard">
+  <div class="mhead"><h3 id="ce-title">✏️ Editar Bloque</h3><button onclick="closeModal('content-editor-modal')">✕</button></div>
+  <div class="fg"><label>Título</label><input type="text" id="ce-block-title"/></div>
+  <div class="fg"><label>Texto / Contenido</label><textarea id="ce-block-body" style="min-height:120px"></textarea></div>
+  <div class="fg">
+    <label>Imagen (opcional)</label>
+    <div class="file-upload-area" ondragover="dragOver(event,'ce-img-area')" ondragleave="dragLeave('ce-img-area')" ondrop="dropFile(event,'ce-img-preview','ce-img-data')" id="ce-img-area">
+      <input type="file" accept="image/*" onchange="previewImg(this,'ce-img-preview','ce-img-data')"/>
+      <span class="up-icon">🖼️</span><div class="up-text">Imagen del bloque</div>
+      <img id="ce-img-preview" class="img-preview" alt=""/>
+    </div>
+    <input type="hidden" id="ce-img-data"/>
+  </div>
+  <div class="fg"><label>Color de fondo</label><input type="color" id="ce-color" value="#1a1a32" style="width:60px;height:40px;border:none;border-radius:8px;cursor:pointer"/></div>
+  <div class="fg"><label>ID del bloque</label><input type="text" id="ce-block-id" placeholder="auto"/></div>
+  <button class="btn-p full" onclick="saveContentBlock()">💾 Guardar bloque</button>
+</div></div>
+
+<!-- CHEAT HUD (hidden by default, admin only) -->
+<div id="cheat-hud" class="cheat-hud hidden">
+  <span class="ch-badge">⚠️ ADMIN MOD</span>
+  <button class="cheat-toggle" id="ct-walls" onclick="toggleCheatFeature('walls')">🧱 Atravesar Paredes: OFF</button>
+  <button class="cheat-toggle" id="ct-immune" onclick="toggleCheatFeature('immune')">🛡️ Inmunidad: OFF</button>
+  <button class="cheat-toggle" id="ct-speed" onclick="toggleCheatFeature('speed')">⚡ Super Velocidad: OFF</button>
+  <button style="background:rgba(239,68,68,.2);border:1px solid var(--er);border-radius:8px;padding:6px 12px;color:var(--er);font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif" onclick="hideCheat()">✕ Cerrar</button>
 </div>
 
-<!-- TOAST -->
-<div id="toast" class="toast hidden"></div>
+<!-- FULLSCREEN -->
+<div id="fsoverlay" class="fsoverlay hidden">
+  <iframe id="fs-iframe" src="about:blank" allowfullscreen></iframe>
+  <button class="exit-fs" onclick="closeFS()">✕ Salir</button>
+</div>
 
-<script src="app.js"></script>
-</body>
-</html>
+<div id="toast" class="hidden"></div>
